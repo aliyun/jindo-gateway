@@ -83,7 +83,7 @@ public class JfsBlockUploadTask implements Runnable {
             return;
         }
 
-        partETag = new PartETag(partNum, (String) status.getResult());
+        partETag = (PartETag) status.getResult();
         
         LOG.debug("Successfully upload part {} of {}, upload id {}, length {}",
                 partNum, taskGroup.getOssPath(), uploadId, length);

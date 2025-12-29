@@ -236,7 +236,7 @@ public class JfsOssBackend {
     }
 
     /**
-     * @return JfsStatus.result is etag
+     * @return JfsStatus.result is PartETag
      */
     public JfsStatus uploadPart(String path, String uploadId, int partNumber, long partSize, String localFilePath) {
         JfsStatus jfsStatus = JfsStatus.OK();
@@ -249,7 +249,7 @@ public class JfsOssBackend {
             request.setInputStream(new FileInputStream(localFilePath));
             request.setPartSize(partSize);
             UploadPartResult result = ossClient.uploadPart(request);
-            jfsStatus.setResult(result.getETag());
+            jfsStatus.setResult(result.getPartETag());
         } catch (RuntimeException e) {
             jfsStatus = JfsStatus.fromException(e);
         } catch (FileNotFoundException e) {
@@ -260,7 +260,7 @@ public class JfsOssBackend {
     }
 
     /**
-     * @return JfsStatus.result is etag
+     * @return JfsStatus.result is PartETag
      */
     public JfsStatus uploadPart(String path, String uploadId, int partNumber, long partSize, byte[] data) {
         JfsStatus jfsStatus = JfsStatus.OK();
@@ -273,7 +273,7 @@ public class JfsOssBackend {
             request.setInputStream(new ByteArrayInputStream(data));
             request.setPartSize(partSize);
             UploadPartResult result = ossClient.uploadPart(request);
-            jfsStatus.setResult(result.getETag());
+            jfsStatus.setResult(result.getPartETag());
         } catch (RuntimeException e) {
             jfsStatus = JfsStatus.fromException(e);
         }
