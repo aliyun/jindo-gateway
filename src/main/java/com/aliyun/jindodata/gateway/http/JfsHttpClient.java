@@ -89,7 +89,7 @@ public class JfsHttpClient {
             Response okResponse = client.newCall(okRequest).execute();
 
             if (!okResponse.isSuccessful()) {
-                String errorBody = okResponse.body() != null ? okResponse.body().string() : "";
+                String errorBody = okResponse.body() != null ? okResponse.body().string().replaceAll("[\r\n]+", " ") : "";
                 String errorMsg = String.format("HTTP request failed with status code: %d, message: %s, body: %s",
                         okResponse.code(), okResponse.message(), errorBody);
                 LOG.error(errorMsg);
