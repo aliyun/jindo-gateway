@@ -512,8 +512,8 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public AclStatus getAclStatus(String s) throws IOException {
-        throw new UnsupportedOperationException("getAclStatus not supported yet.");
+    public AclStatus getAclStatus(String src) throws IOException {
+        return nameSystem.getAclStatus(src);
     }
 
     @Override

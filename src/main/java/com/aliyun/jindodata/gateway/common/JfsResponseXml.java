@@ -1,6 +1,12 @@
 package com.aliyun.jindodata.gateway.common;
 
 import org.apache.hadoop.fs.StorageType;
+import org.apache.hadoop.fs.permission.AclEntry;
+import org.apache.hadoop.fs.permission.AclEntryScope;
+import org.apache.hadoop.fs.permission.AclEntryType;
+import org.apache.hadoop.fs.permission.AclStatus;
+import org.apache.hadoop.fs.permission.FsAction;
+import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.security.token.block.BlockTokenIdentifier;
 import org.apache.hadoop.io.Text;
@@ -381,5 +387,47 @@ public class JfsResponseXml {
         String service = getNodeString(blockTokenNode, "service", null, true);
         return new Token<>(identifier.getBytes(StandardCharsets.UTF_8),
                 password.getBytes(StandardCharsets.UTF_8), new Text(kind), new Text(service));
+    }
+
+    public AclStatus getAclStatus(Element resultNode) throws IOException {
+        String owner = getNodeString(resultNode, "owner", "", true);
+        String group = getNodeString(resultNode, "group", "", true);
+        short permissionValue = getNodeShort(resultNode, "permission", (short) -1, true);
+        boolean stickyBit = getNodeBool(resultNode, "stickyBit", false, true);
+
+        FsPermission permission = new FsPermission(permissionValue);
+
+        List<AclEntry> aclEntries = new ArrayList<>();
+        Element entriesNode = getNode(resultNode, "entries");
+        if (entriesNode != null) {
+            NodeList aclEntryNodes = entriesNode.getElementsByTagName("aclEntry");
+            for (int i = 0; i < aclEntryNodes.getLength(); i++) {
+                Element aclEntryNode = (Element) aclEntryNodes.item(i);
+                
+                int type = getNodeInt(aclEntryNode, "type", -1, true);
+                int scope = getNodeInt(aclEntryNode, "scope", -1, true);
+                int perm = getNodeInt(aclEntryNode, "permission", -1, true);
+                String name = getNodeString(aclEntryNode, "name", null, false);
+
+                AclEntry.Builder builder = new AclEntry.Builder()
+                        .setType(AclEntryType.values()[type])
+                        .setScope(AclEntryScope.values()[scope])
+                        .setPermission(FsAction.values()[perm]);
+                
+                if (name != null && !name.isEmpty()) {
+                    builder.setName(name);
+                }
+                
+                aclEntries.add(builder.build());
+            }
+        }
+
+        return new AclStatus.Builder()
+                .owner(owner)
+                .group(group)
+                .stickyBit(stickyBit)
+                .setPermission(permission)
+                .addEntries(aclEntries)
+                .build();
     }
 }

@@ -7,6 +7,7 @@ import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.AclEntry;
+import org.apache.hadoop.fs.permission.AclStatus;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.ha.HAServiceProtocol;
 import org.apache.hadoop.hdfs.AddBlockFlag;
@@ -291,6 +292,18 @@ public class JindoNameSystem {
             LOG.error("setAcl failed: {}", status.getMessage());
             JfsUtil.throwException(status);
         }
+    }
+
+    public AclStatus getAclStatus(String src) throws IOException {
+        LOG.info("Receive getAclStatus call: src={}", src);
+        JfsGetAclStatusCall call = new JfsGetAclStatusCall();
+        call.setSrc(src);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("getAclStatus failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+        return call.getResult();
     }
 
     public void abandonBlock(ExtendedBlock b, long fileId, String src,
