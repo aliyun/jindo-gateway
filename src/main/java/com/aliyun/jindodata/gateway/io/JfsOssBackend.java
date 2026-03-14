@@ -259,26 +259,26 @@ public class JfsOssBackend {
         return jfsStatus;
     }
 
-    /**
-     * @return JfsStatus.result is PartETag
-     */
-    public JfsStatus uploadPart(String path, String uploadId, int partNumber, long partSize, byte[] data) {
-        JfsStatus jfsStatus = JfsStatus.OK();
-        try {
-            UploadPartRequest request = new UploadPartRequest();
-            request.setBucketName(options.getBucket());
-            request.setKey(path);
-            request.setUploadId(uploadId);
-            request.setPartNumber(partNumber);
-            request.setInputStream(new ByteArrayInputStream(data));
-            request.setPartSize(partSize);
-            UploadPartResult result = ossClient.uploadPart(request);
-            jfsStatus.setResult(result.getPartETag());
-        } catch (RuntimeException e) {
-            jfsStatus = JfsStatus.fromException(e);
-        }
-        return jfsStatus;
-    }
+//    /**
+//     * @return JfsStatus.result is PartETag
+//     */
+//    public JfsStatus uploadPart(String path, String uploadId, int partNumber, long partSize, byte[] data) {
+//        JfsStatus jfsStatus = JfsStatus.OK();
+//        try {
+//            UploadPartRequest request = new UploadPartRequest();
+//            request.setBucketName(options.getBucket());
+//            request.setKey(path);
+//            request.setUploadId(uploadId);
+//            request.setPartNumber(partNumber);
+//            request.setInputStream(new ByteArrayInputStream(data));
+//            request.setPartSize(partSize);
+//            UploadPartResult result = ossClient.uploadPart(request);
+//            jfsStatus.setResult(result.getPartETag());
+//        } catch (RuntimeException e) {
+//            jfsStatus = JfsStatus.fromException(e);
+//        }
+//        return jfsStatus;
+//    }
 
     public JfsStatus completeUpload(String path, String uploadId, List<PartETag> partETags) {
         JfsStatus jfsStatus = JfsStatus.OK();

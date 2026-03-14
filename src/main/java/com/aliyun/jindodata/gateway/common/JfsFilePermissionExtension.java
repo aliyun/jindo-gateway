@@ -96,14 +96,4 @@ public class JfsFilePermissionExtension extends JfsFilePermission {
                 ", extendedShort=" + String.format("0x%04X", toExtendedShort()) +
                 '}';
     }
-
-    public String toReadableString() {
-        return "JfsFilePermissionExtension{" +
-                "permission='" + super.getSymbol() + '\'' +
-                ", octal='" + super.getOctalString() + '\'' +
-                ", aclBit=" + aclBit +
-                ", encryptedBit=" + encryptedBit +
-                ", extendedShort=" + String.format("0x%04X", toExtendedShort()) +
-                '}';
-    }
 }

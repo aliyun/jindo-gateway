@@ -54,25 +54,25 @@ public class HostSet implements Iterable<InetSocketAddress> {
             .getPort());
   }
 
-  /**
-   * The function that checks whether there exists an entry foo in the set
-   * so that addr <= foo.
-   */
-  boolean match(InetSocketAddress addr) {
-    int port = addr.getPort();
-    Collection<Integer> ports = addrs.get(addr.getAddress());
-    boolean exactMatch = ports.contains(port);
-    boolean genericMatch = ports.contains(0);
-    return exactMatch || genericMatch;
-  }
-
-  boolean isEmpty() {
-    return addrs.isEmpty();
-  }
-
-  int size() {
-    return addrs.size();
-  }
+//  /**
+//   * The function that checks whether there exists an entry foo in the set
+//   * so that addr <= foo.
+//   */
+//  boolean match(InetSocketAddress addr) {
+//    int port = addr.getPort();
+//    Collection<Integer> ports = addrs.get(addr.getAddress());
+//    boolean exactMatch = ports.contains(port);
+//    boolean genericMatch = ports.contains(0);
+//    return exactMatch || genericMatch;
+//  }
+//
+//  boolean isEmpty() {
+//    return addrs.isEmpty();
+//  }
+//
+//  int size() {
+//    return addrs.size();
+//  }
 
   void add(InetSocketAddress addr) {
     Preconditions.checkArgument(!addr.isUnresolved());

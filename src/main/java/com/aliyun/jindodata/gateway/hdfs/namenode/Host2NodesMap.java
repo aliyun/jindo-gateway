@@ -141,32 +141,32 @@ class Host2NodesMap {
     }
   }
     
-  /**
-   * Get a data node by its IP address.
-   * @return DatanodeDescriptor if found, null otherwise 
-   */
-  DatanodeDescriptor getDatanodeByHost(String ipAddr) {
-    if (ipAddr == null) {
-      return null;
-    }
-      
-    hostmapLock.readLock().lock();
-    try {
-      DatanodeDescriptor[] nodes = map.get(ipAddr);
-      // no entry
-      if (nodes== null) {
-        return null;
-      }
-      // one node
-      if (nodes.length == 1) {
-        return nodes[0];
-      }
-      // more than one node
-      return nodes[ThreadLocalRandom.current().nextInt(nodes.length)];
-    } finally {
-      hostmapLock.readLock().unlock();
-    }
-  }
+//  /**
+//   * Get a data node by its IP address.
+//   * @return DatanodeDescriptor if found, null otherwise
+//   */
+//  DatanodeDescriptor getDatanodeByHost(String ipAddr) {
+//    if (ipAddr == null) {
+//      return null;
+//    }
+//
+//    hostmapLock.readLock().lock();
+//    try {
+//      DatanodeDescriptor[] nodes = map.get(ipAddr);
+//      // no entry
+//      if (nodes== null) {
+//        return null;
+//      }
+//      // one node
+//      if (nodes.length == 1) {
+//        return nodes[0];
+//      }
+//      // more than one node
+//      return nodes[ThreadLocalRandom.current().nextInt(nodes.length)];
+//    } finally {
+//      hostmapLock.readLock().unlock();
+//    }
+//  }
   
   /**
    * Find data node by its transfer address
@@ -199,29 +199,29 @@ class Host2NodesMap {
 
   
 
-  /** get a data node by its hostname. This should be used if only one 
-   * datanode service is running on a hostname. If multiple datanodes
-   * are running on a hostname then use methods getDataNodeByXferAddr and
-   * getDataNodeByHostNameAndPort.
-   * @return DatanodeDescriptor if found; otherwise null.
-   */
-  DatanodeDescriptor getDataNodeByHostName(String hostname) {
-    if(hostname == null) {
-      return null;
-    }
-    
-    hostmapLock.readLock().lock();
-    try {
-      String ipAddr = mapHost.get(hostname);
-      if(ipAddr == null) {
-        return null;
-      } else {  
-        return getDatanodeByHost(ipAddr);
-      }
-    } finally {
-      hostmapLock.readLock().unlock();
-    }
-  }
+//  /** get a data node by its hostname. This should be used if only one
+//   * datanode service is running on a hostname. If multiple datanodes
+//   * are running on a hostname then use methods getDataNodeByXferAddr and
+//   * getDataNodeByHostNameAndPort.
+//   * @return DatanodeDescriptor if found; otherwise null.
+//   */
+//  DatanodeDescriptor getDataNodeByHostName(String hostname) {
+//    if(hostname == null) {
+//      return null;
+//    }
+//
+//    hostmapLock.readLock().lock();
+//    try {
+//      String ipAddr = mapHost.get(hostname);
+//      if(ipAddr == null) {
+//        return null;
+//      } else {
+//        return getDatanodeByHost(ipAddr);
+//      }
+//    } finally {
+//      hostmapLock.readLock().unlock();
+//    }
+//  }
 
   @Override
   public String toString() {

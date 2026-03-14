@@ -58,23 +58,23 @@ public class JfsBlockUploadTaskGroup {
         return uploadThreadPool;
     }
 
-    public static void shutdownUploadThreadPool() {
-        synchronized (POOL_LOCK) {
-            if (uploadThreadPool != null) {
-                uploadThreadPool.shutdown();
-                try {
-                    if (!uploadThreadPool.awaitTermination(60, TimeUnit.SECONDS)) {
-                        uploadThreadPool.shutdownNow();
-                    }
-                } catch (InterruptedException e) {
-                    uploadThreadPool.shutdownNow();
-                    Thread.currentThread().interrupt();
-                }
-                uploadThreadPool = null;
-                LOG.info("Upload thread pool shutdown");
-            }
-        }
-    }
+//    public static void shutdownUploadThreadPool() {
+//        synchronized (POOL_LOCK) {
+//            if (uploadThreadPool != null) {
+//                uploadThreadPool.shutdown();
+//                try {
+//                    if (!uploadThreadPool.awaitTermination(60, TimeUnit.SECONDS)) {
+//                        uploadThreadPool.shutdownNow();
+//                    }
+//                } catch (InterruptedException e) {
+//                    uploadThreadPool.shutdownNow();
+//                    Thread.currentThread().interrupt();
+//                }
+//                uploadThreadPool = null;
+//                LOG.info("Upload thread pool shutdown");
+//            }
+//        }
+//    }
 
     public void submitTask(String localPartFile, int partNum, long length, String uploadId) {
         submitTask(localPartFile, 0, true, partNum, length, uploadId);

@@ -127,26 +127,4 @@ public class JfsHttpClient {
             }
         }
     }
-
-    private long getCurrentTime() {
-        return System.currentTimeMillis() / 1000;
-    }
-
-    public boolean ignoreError(JfsStatus status) {
-        String errorMsg = status.toString();
-
-        String[] ignoreKeysRoleAK = {"404 Not Found", "NoSuchKey", "Bad Request", "<errCode>30008</errCode>", "ObjectDoesNotMatchPrefixLink"};
-        String[] ignoreKeysNonRoleAK = {"404 Not Found", "NoSuchKey", "Bad Request", "<errCode>30008</errCode>", "ObjectDoesNotMatchPrefixLink",
-                "SignatureDoesNotMatch", "InvalidAccessKeyId", "403 Forbidden"};
-
-        String[] ignoreKeys = /*requestOptions.getCredential().isToken() ?*/ ignoreKeysNonRoleAK /*: ignoreKeysRoleAK*/;
-
-        for (String key : ignoreKeys) {
-            if (errorMsg.contains(key)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
 }
