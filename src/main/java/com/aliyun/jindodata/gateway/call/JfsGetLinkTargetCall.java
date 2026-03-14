@@ -44,7 +44,7 @@ public class JfsGetLinkTargetCall extends JfsBaseCall {
     }
 
     public void setPath(String path) {
-        ((JfsGetLinkTargetRequest) request).setPath(path);
+        request.setPath(path);
     }
 
     public String getTargetPath() {

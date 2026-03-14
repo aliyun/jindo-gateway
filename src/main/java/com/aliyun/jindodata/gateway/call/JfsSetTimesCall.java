@@ -44,7 +44,7 @@ public class JfsSetTimesCall extends JfsBaseCall {
     }
 
     public void setPath(String path) {
-        ((JfsSetTimesRequest) request).setPath(path);
+        request.setPath(path);
     }
 
     public void setAtime(long atime) {

@@ -7,8 +7,6 @@ import com.aliyun.jindodata.gateway.http.request.JfsConcatFileRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
-
 public class JfsConcatFileCall extends JfsBaseCall {
     private static final Logger LOG = LoggerFactory.getLogger(JfsConcatFileCall.class);
 
@@ -47,7 +45,7 @@ public class JfsConcatFileCall extends JfsBaseCall {
     }
 
     public void setPath(String path) {
-        ((JfsConcatFileRequest) request).setPath(path);
+        request.setPath(path);
     }
 
     public void setSources(String[] sources) {

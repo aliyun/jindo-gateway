@@ -26,7 +26,7 @@ public class JfsCreateSymlinkRequest extends JfsAbstractHttpRequest {
 
         requestXml.addRequestParameter(TARGET_KEY, encodePath(target));
         requestXml.addRequestParameter(LINK_KEY, encodePath(link));
-        requestXml.addRequestParameter(PERMISSION_KEY, (int) permission);
+        requestXml.addRequestParameter(PERMISSION_KEY, permission);
         requestXml.addRequestParameter(CREATE_PARENT_KEY, createParent);
 
         setBody(requestXml.getXmlString());

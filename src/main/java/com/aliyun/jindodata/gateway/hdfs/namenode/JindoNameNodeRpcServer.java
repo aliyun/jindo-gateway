@@ -1,8 +1,6 @@
 package com.aliyun.jindodata.gateway.hdfs.namenode;
 
 import com.aliyun.jindodata.gateway.call.*;
-import com.aliyun.jindodata.gateway.common.JfsStatus;
-import com.aliyun.jindodata.gateway.common.JfsUtil;
 import com.aliyun.jindodata.gateway.hdfs.protocol.JindoNamenodeProtocols;
 import com.google.protobuf.BlockingService;
 import org.apache.hadoop.conf.Configuration;
@@ -36,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
-import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 import static org.apache.hadoop.fs.CommonConfigurationKeys.IPC_MAXIMUM_DATA_LENGTH;

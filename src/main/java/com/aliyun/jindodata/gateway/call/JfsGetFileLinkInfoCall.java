@@ -1,6 +1,5 @@
 package com.aliyun.jindodata.gateway.call;
 
-import com.aliyun.jindodata.gateway.common.JfsFileStatus;
 import com.aliyun.jindodata.gateway.common.JfsRequestOptions;
 import com.aliyun.jindodata.gateway.common.JfsStatus;
 import com.aliyun.jindodata.gateway.common.JfsUtil;
@@ -54,7 +53,7 @@ public class JfsGetFileLinkInfoCall extends JfsBaseCall {
     }
 
     public void setPath(String path) {
-        ((JfsGetFileLinkInfoRequest) request).setPath(path);
+        request.setPath(path);
     }
 
     public HdfsFileStatus getFileStatus() {

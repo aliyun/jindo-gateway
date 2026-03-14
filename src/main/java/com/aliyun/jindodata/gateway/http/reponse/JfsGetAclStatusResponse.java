@@ -2,14 +2,10 @@ package com.aliyun.jindodata.gateway.http.reponse;
 
 import com.aliyun.jindodata.gateway.common.JfsResponseXml;
 import com.aliyun.jindodata.gateway.common.JfsStatus;
-import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclStatus;
-import org.apache.hadoop.fs.permission.FsPermission;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.w3c.dom.Element;
-
-import java.util.List;
 
 public class JfsGetAclStatusResponse extends JfsAbstractHttpResponse {
     private static final Logger LOG = LoggerFactory.getLogger(JfsGetAclStatusResponse.class);

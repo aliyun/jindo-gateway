@@ -20,12 +20,4 @@ public class JfsGetLinkTargetRequest extends JfsAbstractHttpRequest {
 
         setBody(requestXml.getXmlString());
     }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
 }

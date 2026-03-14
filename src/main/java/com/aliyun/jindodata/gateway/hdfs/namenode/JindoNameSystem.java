@@ -15,7 +15,6 @@ import org.apache.hadoop.hdfs.AddBlockFlag;
 import org.apache.hadoop.hdfs.HdfsConfiguration;
 import org.apache.hadoop.hdfs.protocol.*;
 import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeDescriptor;
-import org.apache.hadoop.hdfs.server.blockmanagement.DatanodeManager;
 import org.apache.hadoop.hdfs.server.protocol.*;
 import org.apache.hadoop.io.EnumSetWritable;
 import org.apache.hadoop.util.DataChecksum;

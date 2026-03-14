@@ -45,7 +45,7 @@ public class JfsCheckAccessCall extends JfsBaseCall {
     }
 
     public void setPath(String path) {
-        ((JfsCheckAccessRequest) request).setPath(path);
+        request.setPath(path);
     }
 
     public void setFsAction(int fsAction) {
