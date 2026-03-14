@@ -6,6 +6,7 @@ import com.aliyun.jindodata.gateway.common.JfsUtil;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.fs.*;
+import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.ha.HAServiceProtocol;
 import org.apache.hadoop.hdfs.AddBlockFlag;
@@ -276,6 +277,18 @@ public class JindoNameSystem {
         JfsStatus status = call.execute(nn.getJfsRequestOptions());
         if (!status.isOk()) {
             LOG.error("setOwner failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
+    public void setAcl(String src, List<AclEntry> aclSpec) throws IOException {
+        LOG.info("Receive setAcl call: src={}, aclSpec={}", src, aclSpec);
+        JfsSetAclCall call = new JfsSetAclCall();
+        call.setSrc(src);
+        call.setAclSpec(aclSpec);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("setAcl failed: {}", status.getMessage());
             JfsUtil.throwException(status);
         }
     }

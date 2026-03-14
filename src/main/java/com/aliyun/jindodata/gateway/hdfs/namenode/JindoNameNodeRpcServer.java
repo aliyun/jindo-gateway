@@ -507,8 +507,8 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public void setAcl(String s, List<AclEntry> list) throws IOException {
-        throw new UnsupportedOperationException("setAcl not supported yet.");
+    public void setAcl(String src, List<AclEntry> aclSpec) throws IOException {
+        nameSystem.setAcl(src, aclSpec);
     }
 
     @Override

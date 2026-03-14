@@ -1,5 +1,6 @@
 package com.aliyun.jindodata.gateway.common;
 
+import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.jetbrains.annotations.TestOnly;
 import org.slf4j.Logger;
@@ -11,6 +12,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.StringWriter;
 import java.nio.charset.StandardCharsets;
+import java.util.List;
 
 import static com.aliyun.jindodata.gateway.common.JfsConstant.JFS_BACKEND_TYPE_CLOUD;
 
@@ -324,6 +326,41 @@ public class JfsRequestXml {
 
         parametersNode.appendChild(block_node);
         return 0;
+    }
+
+    /**
+     * add List<AclEntry> parameter
+     *
+     * @return 0 means success
+     */
+    public int addRequestParameter(String key, List<AclEntry> aclSpec) {
+        if (parametersNode == null) {
+            LOG.warn("Request Haven't Initiated Parameter.");
+            return -1;
+        }
+        if (aclSpec == null || aclSpec.isEmpty()) {
+            return 0;
+        }
+        try {
+            Element aclSpecNode = document.createElement(key);
+            parametersNode.appendChild(aclSpecNode);
+            
+            for (AclEntry acl : aclSpec) {
+                if (acl == null) {
+                    continue;
+                }
+                Element aclEntryNode = document.createElement("aclEntry");
+                addRequestNode(aclEntryNode, "scope", acl.getScope().ordinal());
+                addRequestNode(aclEntryNode, "name", acl.getName() != null ? acl.getName() : "", true);
+                addRequestNode(aclEntryNode, "type", acl.getType().ordinal());
+                addRequestNode(aclEntryNode, "permission", acl.getPermission().ordinal());
+                aclSpecNode.appendChild(aclEntryNode);
+            }
+            return 0;
+        } catch (Exception e) {
+            LOG.warn("Failed to add AclEntry Request Parameter.", e);
+            return -1;
+        }
     }
 
     /**
