@@ -282,6 +282,19 @@ public class JindoNameSystem {
         }
     }
 
+    public void setTimes(String src, long mtime, long atime) throws IOException {
+        LOG.info("Receive setTimes call: src={}, mtime={}, atime={}", src, mtime, atime);
+        JfsSetTimesCall call = new JfsSetTimesCall();
+        call.setPath(src);
+        call.setMtime(mtime);
+        call.setAtime(atime);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("setTimes failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
     public void setAcl(String src, List<AclEntry> aclSpec) throws IOException {
         LOG.info("Receive setAcl call: src={}, aclSpec={}", src, aclSpec);
         JfsSetAclCall call = new JfsSetAclCall();

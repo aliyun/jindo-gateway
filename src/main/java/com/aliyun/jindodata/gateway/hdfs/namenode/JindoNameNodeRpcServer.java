@@ -370,8 +370,8 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public void setTimes(String s, long l, long l1) throws IOException {
-        throw new UnsupportedOperationException("setTimes not supported yet.");
+    public void setTimes(String src, long mtime, long atime) throws IOException {
+        nameSystem.setTimes(src, mtime, atime);
     }
 
     @Override
