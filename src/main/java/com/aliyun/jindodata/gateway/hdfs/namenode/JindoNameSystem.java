@@ -306,6 +306,52 @@ public class JindoNameSystem {
         return call.getResult();
     }
 
+    public void removeAcl(String src) throws IOException {
+        LOG.info("Receive removeAcl call: src={}", src);
+        JfsRemoveAclCall call = new JfsRemoveAclCall();
+        call.setSrc(src);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("removeAcl failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
+    public void removeDefaultAcl(String src) throws IOException {
+        LOG.info("Receive removeDefaultAcl call: src={}", src);
+        JfsRemoveDefaultAclCall call = new JfsRemoveDefaultAclCall();
+        call.setSrc(src);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("removeDefaultAcl failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
+    public void removeAclEntries(String src, List<AclEntry> aclSpec) throws IOException {
+        LOG.info("Receive removeAclEntries call: src={}, aclSpec={}", src, aclSpec);
+        JfsRemoveAclEntriesCall call = new JfsRemoveAclEntriesCall();
+        call.setSrc(src);
+        call.setAclSpec(aclSpec);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("removeAclEntries failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
+    public void modifyAclEntries(String src, List<AclEntry> aclSpec) throws IOException {
+        LOG.info("Receive modifyAclEntries call: src={}, aclSpec={}", src, aclSpec);
+        JfsModifyAclEntriesCall call = new JfsModifyAclEntriesCall();
+        call.setSrc(src);
+        call.setAclSpec(aclSpec);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("modifyAclEntries failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
     public void abandonBlock(ExtendedBlock b, long fileId, String src,
                              String holder) throws IOException {
         LOG.info("Receive abandonBlock call: b={}, fileId={}, src={}, holder={}", b, fileId, src, holder);

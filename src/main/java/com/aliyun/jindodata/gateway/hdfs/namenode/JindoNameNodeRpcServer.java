@@ -487,23 +487,23 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public void modifyAclEntries(String s, List<AclEntry> list) throws IOException {
-        throw new UnsupportedOperationException("modifyAclEntries not supported yet.");
+    public void modifyAclEntries(String src, List<AclEntry> aclSpec) throws IOException {
+        nameSystem.modifyAclEntries(src, aclSpec);
     }
 
     @Override
-    public void removeAclEntries(String s, List<AclEntry> list) throws IOException {
-        throw new UnsupportedOperationException("removeAclEntries not supported yet.");
+    public void removeAclEntries(String src, List<AclEntry> aclSpec) throws IOException {
+        nameSystem.removeAclEntries(src, aclSpec);
     }
 
     @Override
-    public void removeDefaultAcl(String s) throws IOException {
-        throw new UnsupportedOperationException("removeDefaultAcl not supported yet.");
+    public void removeDefaultAcl(String src) throws IOException {
+        nameSystem.removeDefaultAcl(src);
     }
 
     @Override
-    public void removeAcl(String s) throws IOException {
-        throw new UnsupportedOperationException("removeAcl not supported yet.");
+    public void removeAcl(String src) throws IOException {
+        nameSystem.removeAcl(src);
     }
 
     @Override
