@@ -349,8 +349,8 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public HdfsFileStatus getFileLinkInfo(String s) throws IOException {
-        throw new UnsupportedOperationException("getFileLinkInfo not supported yet.");
+    public HdfsFileStatus getFileLinkInfo(String src) throws IOException {
+        return nameSystem.getFileLinkInfo(src);
     }
 
     @Override
@@ -375,13 +375,13 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public void createSymlink(String s, String s1, FsPermission fsPermission, boolean b) throws IOException {
-        throw new UnsupportedOperationException("setTimes not supported yet.");
+    public void createSymlink(String target, String link, FsPermission perm, boolean createParent) throws IOException {
+        nameSystem.createSymlink(target, link, perm, createParent);
     }
 
     @Override
-    public String getLinkTarget(String s) throws IOException {
-        throw new UnsupportedOperationException("getLinkTarget not supported yet.");
+    public String getLinkTarget(String path) throws IOException {
+        return nameSystem.getLinkTarget(path);
     }
 
     @Override

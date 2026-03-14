@@ -320,6 +320,50 @@ public class JindoNameSystem {
         }
     }
 
+    public void createSymlink(String target, String link, FsPermission perm, boolean createParent) throws IOException {
+        LOG.info("Receive createSymlink call: target={}, link={}, perm={}, createParent={}", target, link, perm, createParent);
+        JfsCreateSymlinkCall call = new JfsCreateSymlinkCall();
+        call.setTarget(target);
+        call.setLink(link);
+        call.setPermission(perm.toShort());
+        call.setCreateParent(createParent);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("createSymlink failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
+    public HdfsFileStatus getFileLinkInfo(String src) throws IOException {
+        LOG.info("Receive getFileLinkInfo call: src={}", src);
+        JfsGetFileLinkInfoCall call = new JfsGetFileLinkInfoCall();
+        call.setPath(src);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            if (status.getCode() == JfsStatus.FILE_NOT_FOUND_ERROR) {
+                return null;
+            }
+            LOG.error("getFileLinkInfo failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+        return call.getFileStatus();
+    }
+
+    public String getLinkTarget(String path) throws IOException {
+        LOG.info("Receive getLinkTarget call: path={}", path);
+        JfsGetLinkTargetCall call = new JfsGetLinkTargetCall();
+        call.setPath(path);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            if (status.getCode() == JfsStatus.FILE_NOT_FOUND_ERROR) {
+                return null;
+            }
+            LOG.error("getLinkTarget failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+        return call.getTargetPath();
+    }
+
     public void setAcl(String src, List<AclEntry> aclSpec) throws IOException {
         LOG.info("Receive setAcl call: src={}, aclSpec={}", src, aclSpec);
         JfsSetAclCall call = new JfsSetAclCall();
