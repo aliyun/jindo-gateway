@@ -736,4 +736,57 @@ public class JindoNameSystem {
             JfsUtil.throwException(status);
         }
     }
+
+    // ========== XAttr 操作 ==========
+
+    public void setXAttr(String src, XAttr xAttr, EnumSet<XAttrSetFlag> flag) throws IOException {
+        LOG.info("Receive setXAttr call: src={}, xAttr namespace={}, name={}", 
+                src, xAttr.getNameSpace(), xAttr.getName());
+        JfsSetXAttrCall call = new JfsSetXAttrCall();
+        call.setSrc(src);
+        call.setXAttr(xAttr);
+        call.setFlag(flag);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("setXAttr failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
+    public List<XAttr> getXAttrs(String src, List<XAttr> xAttrs) throws IOException {
+        LOG.info("Receive getXAttrs call: src={}", src);
+        JfsGetXAttrsCall call = new JfsGetXAttrsCall();
+        call.setSrc(src);
+        call.setXAttrs(xAttrs);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("getXAttrs failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+        return call.getResult();
+    }
+
+    public List<XAttr> listXAttrs(String src) throws IOException {
+        LOG.info("Receive listXAttrs call: src={}", src);
+        JfsListXAttrsCall call = new JfsListXAttrsCall();
+        call.setSrc(src);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("listXAttrs failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+        return call.getResult();
+    }
+
+    public void removeXAttr(String src, XAttr xAttr) throws IOException {
+        LOG.info("Receive removeXAttr call: src={}, xAttr={}", src, xAttr);
+        JfsRemoveXAttrCall call = new JfsRemoveXAttrCall();
+        call.setSrc(src);
+        call.setXAttr(xAttr);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("removeXAttr failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
 }

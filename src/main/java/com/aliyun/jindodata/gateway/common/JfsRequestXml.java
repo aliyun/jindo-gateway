@@ -1,5 +1,6 @@
 package com.aliyun.jindodata.gateway.common;
 
+import org.apache.hadoop.fs.XAttr;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.hdfs.protocol.ExtendedBlock;
 import org.jetbrains.annotations.TestOnly;
@@ -359,6 +360,89 @@ public class JfsRequestXml {
             return 0;
         } catch (Exception e) {
             LOG.warn("Failed to add AclEntry Request Parameter.", e);
+            return -1;
+        }
+    }
+
+    /**
+     * add XAttr parameter
+     * 参考 JfsRequestXml.cpp 第 300-322 行
+     * XML format:
+     * <xAttr>
+     *   <namespace>0</namespace>
+     *   <name>myattr</name>
+     *   <value>base64_value</value>
+     * </xAttr>
+     *
+     * @return 0 means success
+     */
+    public int addRequestParameter(String key, XAttr xAttr) {
+        if (parametersNode == null) {
+            LOG.warn("Request Haven't Initiated Parameter.");
+            return -1;
+        }
+        if (xAttr == null) {
+            return 0;
+        }
+        try {
+            Element xAttrNode = document.createElement(key);
+            // namespace 使用整数值 (USER=0, TRUSTED=1, SYSTEM=2, SECURITY=3, RAW=4)
+            addRequestNode(xAttrNode, "namespace", xAttr.getNameSpace().ordinal());
+            addRequestNode(xAttrNode, "name", xAttr.getName(), false);
+            if (xAttr.getValue() != null) {
+                addRequestNode(xAttrNode, "value", 
+                        java.util.Base64.getEncoder().encodeToString(xAttr.getValue()), false);
+            }
+            parametersNode.appendChild(xAttrNode);
+            return 0;
+        } catch (Exception e) {
+            LOG.warn("Failed to add XAttr Request Parameter.", e);
+            return -1;
+        }
+    }
+
+    /**
+     * add List<XAttr> parameter
+     * 参考 JfsRequestXml.cpp 第 324-344 行
+     * XML format:
+     * <xAttrs>
+     *   <xAttr>
+     *     <namespace>0</namespace>
+     *     <name>myattr</name>
+     *   </xAttr>
+     * </xAttrs>
+     *
+     * @return 0 means success
+     */
+    public int addRequestParameterXAttrs(String key, List<XAttr> xAttrs) {
+        if (parametersNode == null) {
+            LOG.warn("Request Haven't Initiated Parameter.");
+            return -1;
+        }
+        if (xAttrs == null || xAttrs.isEmpty()) {
+            return 0;
+        }
+        try {
+            Element xAttrsNode = document.createElement(key);
+            parametersNode.appendChild(xAttrsNode);
+            
+            for (XAttr xAttr : xAttrs) {
+                if (xAttr == null) {
+                    continue;
+                }
+                Element xAttrNode = document.createElement("xAttr");
+                // namespace 使用整数值 (USER=0, TRUSTED=1, SYSTEM=2, SECURITY=3, RAW=4)
+                addRequestNode(xAttrNode, "namespace", xAttr.getNameSpace().ordinal());
+                addRequestNode(xAttrNode, "name", xAttr.getName(), false);
+                if (xAttr.getValue() != null) {
+                    addRequestNode(xAttrNode, "value", 
+                            java.util.Base64.getEncoder().encodeToString(xAttr.getValue()), false);
+                }
+                xAttrsNode.appendChild(xAttrNode);
+            }
+            return 0;
+        } catch (Exception e) {
+            LOG.warn("Failed to add XAttrs Request Parameter.", e);
             return -1;
         }
     }

@@ -532,23 +532,23 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public void setXAttr(String s, XAttr xAttr, EnumSet<XAttrSetFlag> enumSet) throws IOException {
-        throw new UnsupportedOperationException("setXAttr not supported yet.");
+    public void setXAttr(String src, XAttr xAttr, EnumSet<XAttrSetFlag> flag) throws IOException {
+        nameSystem.setXAttr(src, xAttr, flag);
     }
 
     @Override
-    public List<XAttr> getXAttrs(String s, List<XAttr> list) throws IOException {
-        throw new UnsupportedOperationException("getXAttrs not supported yet.");
+    public List<XAttr> getXAttrs(String src, List<XAttr> xAttrs) throws IOException {
+        return nameSystem.getXAttrs(src, xAttrs);
     }
 
     @Override
-    public List<XAttr> listXAttrs(String s) throws IOException {
-        throw new UnsupportedOperationException("listXAttrs not supported yet.");
+    public List<XAttr> listXAttrs(String src) throws IOException {
+        return nameSystem.listXAttrs(src);
     }
 
     @Override
-    public void removeXAttr(String s, XAttr xAttr) throws IOException {
-        throw new UnsupportedOperationException("removeXAttr not supported yet.");
+    public void removeXAttr(String src, XAttr xAttr) throws IOException {
+        nameSystem.removeXAttr(src, xAttr);
     }
 
     @Override
