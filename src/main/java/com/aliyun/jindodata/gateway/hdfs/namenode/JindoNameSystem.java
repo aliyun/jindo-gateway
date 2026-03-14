@@ -8,6 +8,7 @@ import org.apache.hadoop.crypto.CryptoProtocolVersion;
 import org.apache.hadoop.fs.*;
 import org.apache.hadoop.fs.permission.AclEntry;
 import org.apache.hadoop.fs.permission.AclStatus;
+import org.apache.hadoop.fs.permission.FsAction;
 import org.apache.hadoop.fs.permission.FsPermission;
 import org.apache.hadoop.ha.HAServiceProtocol;
 import org.apache.hadoop.hdfs.AddBlockFlag;
@@ -303,6 +304,18 @@ public class JindoNameSystem {
         JfsStatus status = call.execute(nn.getJfsRequestOptions());
         if (!status.isOk()) {
             LOG.error("concat failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
+    public void checkAccess(String src, FsAction fsAction) throws IOException {
+        LOG.info("Receive checkAccess call: src={}, fsAction={}", src, fsAction);
+        JfsCheckAccessCall call = new JfsCheckAccessCall();
+        call.setPath(src);
+        call.setFsAction(fsAction.ordinal());
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("checkAccess failed: {}", status.getMessage());
             JfsUtil.throwException(status);
         }
     }

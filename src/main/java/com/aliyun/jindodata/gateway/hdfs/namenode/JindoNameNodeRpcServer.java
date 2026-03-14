@@ -552,8 +552,8 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public void checkAccess(String s, FsAction fsAction) throws IOException {
-        throw new UnsupportedOperationException("checkAccess not supported yet.");
+    public void checkAccess(String src, FsAction fsAction) throws IOException {
+        nameSystem.checkAccess(src, fsAction);
     }
 
     @Override
