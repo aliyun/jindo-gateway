@@ -364,6 +364,43 @@ public class JfsRequestXml {
     }
 
     /**
+     * add sources parameter for concat
+     * XML format:
+     * <sources>
+     *   <source>path1</source>
+     *   <source>path2</source>
+     * </sources>
+     *
+     * @return 0 means success
+     */
+    public int addRequestParameterSources(String key, String[] sources) {
+        if (parametersNode == null) {
+            LOG.warn("Request Haven't Initiated Parameter.");
+            return -1;
+        }
+        if (sources == null || sources.length == 0) {
+            return 0;
+        }
+        try {
+            Element sourcesNode = document.createElement(key);
+            parametersNode.appendChild(sourcesNode);
+            
+            for (String source : sources) {
+                if (source == null) {
+                    continue;
+                }
+                Element sourceNode = document.createElement("source");
+                sourceNode.setTextContent(encodePath(source));
+                sourcesNode.appendChild(sourceNode);
+            }
+            return 0;
+        } catch (Exception e) {
+            LOG.warn("Failed to add sources Request Parameter.", e);
+            return -1;
+        }
+    }
+
+    /**
      * get XML String
      *
      * @return XML String

@@ -295,6 +295,18 @@ public class JindoNameSystem {
         }
     }
 
+    public void concat(String trg, String[] srcs) throws IOException {
+        LOG.info("Receive concat call: trg={}, srcs={}", trg, java.util.Arrays.toString(srcs));
+        JfsConcatFileCall call = new JfsConcatFileCall();
+        call.setPath(trg);
+        call.setSources(srcs);
+        JfsStatus status = call.execute(nn.getJfsRequestOptions());
+        if (!status.isOk()) {
+            LOG.error("concat failed: {}", status.getMessage());
+            JfsUtil.throwException(status);
+        }
+    }
+
     public void setAcl(String src, List<AclEntry> aclSpec) throws IOException {
         LOG.info("Receive setAcl call: src={}, aclSpec={}", src, aclSpec);
         JfsSetAclCall call = new JfsSetAclCall();

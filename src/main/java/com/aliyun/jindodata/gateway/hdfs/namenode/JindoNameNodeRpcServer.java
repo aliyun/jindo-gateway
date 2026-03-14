@@ -222,8 +222,8 @@ public class JindoNameNodeRpcServer implements JindoNamenodeProtocols {
     }
 
     @Override
-    public void concat(String s, String[] strings) throws IOException {
-        throw new UnsupportedOperationException("concat not supported yet.");
+    public void concat(String trg, String[] srcs) throws IOException {
+        nameSystem.concat(trg, srcs);
     }
 
     @Override
