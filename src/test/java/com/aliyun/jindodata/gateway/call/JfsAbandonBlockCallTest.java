@@ -38,5 +38,7 @@ public class JfsAbandonBlockCallTest extends JindoTestBase {
         
         System.out.println("错误码: " + status.getCode());
         System.out.println("错误信息: " + status.getMessage());
+
+        stopNameNode(nn);
     }
 }
