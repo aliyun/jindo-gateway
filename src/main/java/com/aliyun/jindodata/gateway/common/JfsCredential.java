@@ -1,6 +1,10 @@
 package com.aliyun.jindodata.gateway.common;
 
 public class JfsCredential {
+    private String accessKey;
+    private String accessKeySecret;
+    private String accessToken;
+
     public JfsCredential(String accessKey, String accessKeySecret, String accessToken) {
         this.accessKey = accessKey;
         this.accessKeySecret = accessKeySecret;
@@ -30,8 +34,4 @@ public class JfsCredential {
     public void setAccessToken(String accessToken) {
         this.accessToken = accessToken;
     }
-
-    public String accessKey;
-    public String accessKeySecret;
-    public String accessToken;
 }
