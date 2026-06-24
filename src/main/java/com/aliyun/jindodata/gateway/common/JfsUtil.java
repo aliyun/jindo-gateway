@@ -31,6 +31,23 @@ import java.io.FileNotFoundException;
 public class JfsUtil {
     private static final Logger LOG = LoggerFactory.getLogger(JfsUtil.class.getName());
 
+    // 0-9: 0-9, A-F: 10-15, a-f: 10-15, others: -1
+    private static final byte[] HEX_TABLE = new byte[256];
+    static {
+        for (int i = 0; i < 256; i++) {
+            HEX_TABLE[i] = -1;
+        }
+        for (int i = 0; i < 10; i++) {
+            HEX_TABLE['0' + i] = (byte) i;
+        }
+        for (int i = 0; i < 6; i++) {
+            HEX_TABLE['A' + i] = (byte) (10 + i);
+        }
+        for (int i = 0; i < 6; i++) {
+            HEX_TABLE['a' + i] = (byte) (10 + i);
+        }
+    }
+
     public static String guessRegion(String endpoint) {
         if (endpoint == null || endpoint.isEmpty()) {
             return null;
@@ -141,24 +158,6 @@ public class JfsUtil {
             return null;
         }
 
-        // 0-9: 0-9, A-F: 10-15, a-f: 10-15, others: -1
-        final byte[] hexTable = new byte[256];
-        for (int i = 0; i < 256; i++) {
-            hexTable[i] = -1;
-        }
-        // 0-9
-        for (int i = 0; i < 10; i++) {
-            hexTable['0' + i] = (byte) i;
-        }
-        // A-F
-        for (int i = 0; i < 6; i++) {
-            hexTable['A' + i] = (byte) (10 + i);
-        }
-        // a-f
-        for (int i = 0; i < 6; i++) {
-            hexTable['a' + i] = (byte) (10 + i);
-        }
-
         StringBuilder output = new StringBuilder();
         int i = 0;
         while (i < input.length()) {
@@ -171,8 +170,8 @@ public class JfsUtil {
                 char c1 = input.charAt(i + 1);
                 char c2 = input.charAt(i + 2);
 
-                byte v1 = hexTable[c1 & 0xFF];
-                byte v2 = hexTable[c2 & 0xFF];
+                byte v1 = HEX_TABLE[c1 & 0xFF];
+                byte v2 = HEX_TABLE[c2 & 0xFF];
 
                 if (v1 < 0 || v2 < 0) {
                     return null;
