@@ -13,7 +13,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.ByteArrayInputStream;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.List;
 
 import static com.aliyun.jindodata.gateway.common.JfsConstant.FILE_TYPE_DIRECTORY;
@@ -205,15 +205,14 @@ public class JfsOssBackend {
 
     public JfsStatus put(String path, String localFilePath) {
         JfsStatus jfsStatus = JfsStatus.OK();
-        try {
-            PutObjectRequest putObjectRequest = new PutObjectRequest(options.getBucket(), path,
-                    new FileInputStream(localFilePath));
-            PutObjectResult result = ossClient.putObject(putObjectRequest);
+        try (FileInputStream fis = new FileInputStream(localFilePath)) {
+            PutObjectRequest putObjectRequest = new PutObjectRequest(options.getBucket(), path, fis);
+            ossClient.putObject(putObjectRequest);
         } catch (RuntimeException e) {
             jfsStatus = JfsStatus.fromException(e);
-        } catch (FileNotFoundException e) {
-            LOG.warn("Local file not found: {} for putObject", localFilePath);
-            jfsStatus = JfsStatus.fromException(e);
+        } catch (IOException e) {
+            LOG.warn("IO error for putObject {}", localFilePath, e);
+            jfsStatus = JfsStatus.ioError(e.getMessage());
         }
 
         return jfsStatus;
@@ -240,21 +239,21 @@ public class JfsOssBackend {
      */
     public JfsStatus uploadPart(String path, String uploadId, int partNumber, long partSize, String localFilePath) {
         JfsStatus jfsStatus = JfsStatus.OK();
-        try {
+        try (FileInputStream fis = new FileInputStream(localFilePath)) {
             UploadPartRequest request = new UploadPartRequest();
             request.setBucketName(options.getBucket());
             request.setKey(path);
             request.setUploadId(uploadId);
             request.setPartNumber(partNumber);
-            request.setInputStream(new FileInputStream(localFilePath));
+            request.setInputStream(fis);
             request.setPartSize(partSize);
             UploadPartResult result = ossClient.uploadPart(request);
             jfsStatus.setResult(result.getPartETag());
         } catch (RuntimeException e) {
             jfsStatus = JfsStatus.fromException(e);
-        } catch (FileNotFoundException e) {
-            LOG.warn("Local file not found: {} for uploadPart", localFilePath);
-            jfsStatus = JfsStatus.fromException(e);
+        } catch (IOException e) {
+            LOG.warn("IO error for uploadPart {}", localFilePath, e);
+            jfsStatus = JfsStatus.ioError(e.getMessage());
         }
         return jfsStatus;
     }
