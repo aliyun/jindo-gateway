@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.util.concurrent.ConcurrentHashMap;
 import java.nio.charset.StandardCharsets;
 import java.io.FileNotFoundException;
 
@@ -304,6 +305,29 @@ public class JfsUtil {
         }
     }
 
+    private static final ConcurrentHashMap<String, Field> FIELD_CACHE = new ConcurrentHashMap<>();
+
+    private static Field findField(Class<?> startClass, String fieldName) throws NoSuchFieldException {
+        String cacheKey = startClass.getName() + "#" + fieldName;
+        Field cached = FIELD_CACHE.get(cacheKey);
+        if (cached != null) {
+            return cached;
+        }
+
+        Class<?> clazz = startClass;
+        while (clazz != null) {
+            try {
+                Field field = clazz.getDeclaredField(fieldName);
+                field.setAccessible(true);
+                FIELD_CACHE.put(cacheKey, field);
+                return field;
+            } catch (NoSuchFieldException e) {
+                clazz = clazz.getSuperclass();
+            }
+        }
+        throw new NoSuchFieldException("Field '" + fieldName + "' not found in class hierarchy of " + startClass.getName());
+    }
+
     public static void setFieldValue(Object obj, String fieldName, Object value)
             throws NoSuchFieldException, IllegalAccessException {
         if (obj == null) {
@@ -312,28 +336,10 @@ public class JfsUtil {
         if (fieldName == null || fieldName.isEmpty()) {
             throw new IllegalArgumentException("Field name cannot be null or empty");
         }
-        
-        Class<?> clazz = obj.getClass();
-        Field field = null;
-
-        while (clazz != null) {
-            try {
-                field = clazz.getDeclaredField(fieldName);
-                break;
-            } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        
-        if (field == null) {
-            throw new NoSuchFieldException("Field '" + fieldName + "' not found in class hierarchy");
-        }
-
-        field.setAccessible(true);
-        field.set(obj, value);
+        findField(obj.getClass(), fieldName).set(obj, value);
     }
 
-    public static Object getFieldValue(Object obj, String fieldName) 
+    public static Object getFieldValue(Object obj, String fieldName)
             throws NoSuchFieldException, IllegalAccessException {
         if (obj == null) {
             throw new IllegalArgumentException("Object cannot be null");
@@ -341,25 +347,7 @@ public class JfsUtil {
         if (fieldName == null || fieldName.isEmpty()) {
             throw new IllegalArgumentException("Field name cannot be null or empty");
         }
-        
-        Class<?> clazz = obj.getClass();
-        Field field = null;
-
-        while (clazz != null) {
-            try {
-                field = clazz.getDeclaredField(fieldName);
-                break;
-            } catch (NoSuchFieldException e) {
-                clazz = clazz.getSuperclass();
-            }
-        }
-        
-        if (field == null) {
-            throw new NoSuchFieldException("Field '" + fieldName + "' not found in class hierarchy");
-        }
-
-        field.setAccessible(true);
-        return field.get(obj);
+        return findField(obj.getClass(), fieldName).get(obj);
     }
 
     public static String maybeAddTrailingSlash(String path) {
